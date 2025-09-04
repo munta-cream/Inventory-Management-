@@ -1,0 +1,78 @@
+@model IEnumerable<Inventory_Management_Requirements.Models.Inventory>
+
+@{
+    ViewData["Title"] = "Inventories";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="mb-0">
+                    <i class="fas fa-boxes"></i> Inventories
+                </h1>
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create New Inventory
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Count() > 0)
+    {
+        <div class="row">
+            @foreach (var inventory in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a asp-action="Details" asp-route-id="@inventory.Id" class="text-decoration-none">
+                                    @inventory.Title
+                                </a>
+                            </h5>
+                            <p class="card-text text-muted">@inventory.Description</p>
+
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <small class="text-muted">
+                                        <i class="fas fa-cube"></i> @inventory.Items.Count items
+                                    </small>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">
+                                        <i class="fas fa-tag"></i> @inventory.Category?.Name
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    Created by @inventory.CreatedBy?.UserName
+                                </small>
+                                <a asp-action="Details" asp-route-id="@inventory.Id" class="btn btn-sm btn-outline-primary">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
+                    <h3 class="text-muted">No inventories yet</h3>
+                    <p class="text-muted mb-4">Create your first inventory to get started managing your items.</p>
+                    <a asp-action="Create" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus"></i> Create Your First Inventory
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

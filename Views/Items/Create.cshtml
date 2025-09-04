@@ -1,0 +1,17 @@
+@model Item
+
+<h2>Create Item</h2>
+
+<form asp-action="Create" enctype="multipart/form-data">
+    <input type="hidden" asp-for="InventoryId" value="@ViewBag.Inventory.Id" />
+    <div class="form-group">
+        <label asp-for="FieldData"></label>
+        <textarea asp-for="FieldData" class="form-control"></textarea>
+        <span asp-validation-for="FieldData" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+<div>
+    <a asp-action="Details" asp-route-id="@ViewBag.Inventory.Id">Back to Inventory</a>
+</div>

@@ -1,0 +1,166 @@
+@model CustomIdFormat
+@{
+    ViewData["Title"] = "Custom ID Format";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Custom ID Format Builder</h4>
+                </div>
+                <div class="card-body">
+                    <div id="format-builder">
+                        <div class="mb-3">
+                            <label class="form-label">Format Elements:</label>
+                            <div id="elements-container" class="border p-3 mb-3" style="min-height: 100px;">
+                                <!-- Elements will be added here -->
+                            </div>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="addElement('fixed')">Add Fixed Text</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="addElement('random')">Add Random Number</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="addElement('guid')">Add GUID</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="addElement('datetime')">Add Date/Time</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="addElement('seq')">Add Sequence</button>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Preview:</label>
+                            <div class="input-group">
+                                <input type="text" id="preview-id" class="form-control" readonly>
+                                <button type="button" class="btn btn-outline-secondary" onclick="generatePreview()">Generate Preview</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-primary" onclick="saveFormat()">Save Format</button>
+                            <a href="/Inventories" class="btn btn-secondary">Back to Inventories</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let elements = @Html.Raw(Model?.FormatDefinition ?? "[]");
+
+    function addElement(type) {
+        const element = { type: type };
+        switch (type) {
+            case 'fixed':
+                element.value = 'PREFIX-';
+                break;
+            case 'random':
+                element.digits = 4;
+                break;
+            case 'datetime':
+                element.format = 'yyyyMMdd';
+                break;
+            case 'seq':
+                element.pad = 3;
+                break;
+        }
+        elements.push(element);
+        renderElements();
+    }
+
+    function renderElements() {
+        const container = document.getElementById('elements-container');
+        container.innerHTML = '';
+
+        elements.forEach((element, index) => {
+            const elementDiv = document.createElement('div');
+            elementDiv.className = 'element-item mb-2 p-2 border rounded';
+            elementDiv.innerHTML = createElementHtml(element, index);
+            container.appendChild(elementDiv);
+        });
+    }
+
+    function createElementHtml(element, index) {
+        let html = `<div class="d-flex align-items-center">
+            <span class="badge bg-primary me-2">${element.type.toUpperCase()}</span>`;
+
+        switch (element.type) {
+            case 'fixed':
+                html += `<input type="text" class="form-control form-control-sm me-2" value="${element.value || ''}" onchange="updateElement(${index}, 'value', this.value)">`;
+                break;
+            case 'random':
+                html += `<label class="me-1">Digits:</label>
+                        <input type="number" class="form-control form-control-sm me-2" style="width: 80px;" value="${element.digits || 4}" onchange="updateElement(${index}, 'digits', parseInt(this.value))">`;
+                break;
+            case 'datetime':
+                html += `<label class="me-1">Format:</label>
+                        <input type="text" class="form-control form-control-sm me-2" value="${element.format || 'yyyyMMdd'}" onchange="updateElement(${index}, 'format', this.value)">`;
+                break;
+            case 'seq':
+                html += `<label class="me-1">Pad:</label>
+                        <input type="number" class="form-control form-control-sm me-2" style="width: 80px;" value="${element.pad || 3}" onchange="updateElement(${index}, 'pad', parseInt(this.value))">`;
+                break;
+            case 'guid':
+                html += `<span class="text-muted">Generates a unique GUID</span>`;
+                break;
+        }
+
+        html += `<button type="button" class="btn btn-outline-danger btn-sm ms-2" onclick="removeElement(${index})">Remove</button>
+                 <button type="button" class="btn btn-outline-secondary btn-sm ms-1" onclick="moveElement(${index}, -1)">↑</button>
+                 <button type="button" class="btn btn-outline-secondary btn-sm ms-1" onclick="moveElement(${index}, 1)">↓</button>
+                 </div>`;
+
+        return html;
+    }
+
+    function updateElement(index, property, value) {
+        elements[index][property] = value;
+    }
+
+    function removeElement(index) {
+        elements.splice(index, 1);
+        renderElements();
+    }
+
+    function moveElement(index, direction) {
+        const newIndex = index + direction;
+        if (newIndex >= 0 && newIndex < elements.length) {
+            [elements[index], elements[newIndex]] = [elements[newIndex], elements[index]];
+            renderElements();
+        }
+    }
+
+    function generatePreview() {
+        const inventoryId = @ViewContext.RouteData.Values["inventoryId"] || 1;
+        fetch(`/CustomId/Preview?inventoryId=${inventoryId}&formatJson=${encodeURIComponent(JSON.stringify({ elements: elements }))}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('preview-id').value = data.id;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function saveFormat() {
+        const inventoryId = @ViewContext.RouteData.Values["inventoryId"] || 1;
+        fetch('/CustomId/SaveFormat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `inventoryId=${inventoryId}&formatJson=${encodeURIComponent(JSON.stringify({ elements: elements }))}`
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Format saved successfully!');
+            } else {
+                alert('Error saving format.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        if (elements && elements.length > 0) {
+            renderElements();
+        }
+    });
+</script>

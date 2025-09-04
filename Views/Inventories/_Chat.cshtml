@@ -1,0 +1,34 @@
+@model List<Inventory_Management_Requirements.Models.Comment>
+
+<div class="chat-container">
+    <div class="chat-messages">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var comment in Model)
+            {
+                <div class="chat-message">
+                    <div class="message-header">
+                        <strong>@comment.User?.UserName</strong>
+                        <span class="message-time">@comment.CreatedAt.ToString("g")</span>
+                    </div>
+                    <div class="message-content">
+                        @comment.Content
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No comments yet. Be the first to comment!</p>
+        }
+    </div>
+    
+    <div class="chat-input">
+        <form id="commentForm">
+            <div class="form-group">
+                <textarea id="commentContent" class="form-control" rows="3" placeholder="Add a comment..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Post Comment</button>
+        </form>
+    </div>
+</div>

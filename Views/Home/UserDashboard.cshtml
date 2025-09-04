@@ -1,0 +1,243 @@
+@model dynamic
+@{
+    ViewData["Title"] = "My Dashboard";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">
+                <i class="fas fa-home"></i> Welcome back, @User.Identity.Name!
+            </h1>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">My Inventories</h5>
+                            <h2>@Model.MyInventories.Count</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-boxes fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Shared With Me</h5>
+                            <h2>@Model.SharedInventories.Count</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-share-alt fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Total Items</h5>
+                            <h2>@Model.TotalItems</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-cube fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- My Inventories -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-box"></i> My Inventories
+                    </h5>
+                    <a asp-controller="Inventories" asp-action="Create" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Create New
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if (Model.MyInventories.Count > 0)
+                    {
+                        <div class="row">
+                            @foreach (var inventory in Model.MyInventories)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <a asp-controller="Inventories" asp-action="Details" asp-route-id="@inventory.Id" class="text-decoration-none">
+                                                    @inventory.Title
+                                                </a>
+                                            </h6>
+                                            <p class="card-text small text-muted">@inventory.Description</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <small class="text-muted">
+                                                    @inventory.Items.Count item@(inventory.Items.Count != 1 ? "s" : "")
+                                                </small>
+                                                @if (inventory.Category != null)
+                                                {
+                                                    <span class="badge bg-secondary">@inventory.Category.Name</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No inventories yet</h5>
+                            <p class="text-muted">Create your first inventory to get started!</p>
+                            <a asp-controller="Inventories" asp-action="Create" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Create Inventory
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Shared Inventories -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-share-alt"></i> Shared With Me
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.SharedInventories.Count > 0)
+                    {
+                        <div class="row">
+                            @foreach (var inventory in Model.SharedInventories)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <a asp-controller="Inventories" asp-action="Details" asp-route-id="@inventory.Id" class="text-decoration-none">
+                                                    @inventory.Title
+                                                </a>
+                                            </h6>
+                                            <p class="card-text small text-muted">@inventory.Description</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <small class="text-muted">
+                                                    @inventory.Items.Count item@(inventory.Items.Count != 1 ? "s" : "")
+                                                </small>
+                                                <small class="text-muted">
+                                                    by @inventory.CreatedBy?.UserName
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No shared inventories</h5>
+                            <p class="text-muted">Inventories shared with you will appear here.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    @if (Model.RecentActivity.Count > 0)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-clock"></i> Recent Activity
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            @foreach (var item in Model.RecentActivity)
+                            {
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <div>
+                                            <h6 class="mb-1">
+                                                <a asp-controller="Items" asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none">
+                                                    Item: @item.CustomId
+                                                </a>
+                                            </h6>
+                                            <p class="mb-1">in inventory "@item.Inventory.Title"</p>
+                                        </div>
+                                        <small class="text-muted">@item.CreatedAt.ToString("MMM dd, yyyy")</small>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Quick Actions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-bolt"></i> Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a asp-controller="Inventories" asp-action="Create" class="btn btn-outline-primary btn-lg w-100 mb-2">
+                                <i class="fas fa-plus"></i> New Inventory
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a asp-controller="Search" asp-action="Index" class="btn btn-outline-success btn-lg w-100 mb-2">
+                                <i class="fas fa-search"></i> Search Items
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a asp-controller="Inventories" asp-action="Index" class="btn btn-outline-info btn-lg w-100 mb-2">
+                                <i class="fas fa-list"></i> All Inventories
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a asp-area="Identity" asp-page="/Account/Manage/Index" class="btn btn-outline-secondary btn-lg w-100 mb-2">
+                                <i class="fas fa-user"></i> My Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
