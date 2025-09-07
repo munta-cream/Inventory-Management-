@@ -1,0 +1,46 @@
+@using System.Text.Json
+@model IEnumerable<Item>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Custom ID</th>
+                @foreach (var field in Model.Where(i => !string.IsNullOrEmpty(i.FieldData)).SelectMany(i => JsonDocument.Parse(i.FieldData).RootElement.EnumerateObject()).Select(p => p.Name).Distinct())
+            {
+                <th>@field</th>
+            }
+                <th>Created By</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+        {
+            <tr onclick="toggleActions(@item.Id)" style="cursor: pointer;">
+                <td>@item.CustomId</td>
+                @foreach (var field in Model.Where(i => !string.IsNullOrEmpty(i.FieldData)).SelectMany(i => JsonDocument.Parse(i.FieldData).RootElement.EnumerateObject()).Select(p => p.Name).Distinct())
+                {
+                <td>
+                    @if (!string.IsNullOrEmpty(item.FieldData))
+                    {
+                        var jsonDoc = JsonDocument.Parse(item.FieldData);
+                        @(jsonDoc.RootElement.TryGetProperty(field, out var val) ? val.ToString() : "")
+                    }
+                </td>
+                }
+                <td>@item.CreatedBy.UserName</td>
+                <td id="actions-@item.Id" style="display:none;">
+                    <a href="/Items/Edit/@item.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                    <a href="/Items/Delete/@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <script>
+function toggleActions(id) {
+    const el = document.getElementById(`actions-${id}`);
+    el.style.display = el.style.display === 'none' ? 'table-cell' : 'none';
+}
+    </script>

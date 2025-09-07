@@ -1,0 +1,35 @@
+@model Inventory_Management_Requirements.Models.ChatViewModel
+
+<div class="chat-container">
+    <div class="chat-messages">
+        @if (Model.Comments != null && Model.Comments.Any())
+        {
+            @foreach (var comment in Model.Comments)
+            {
+                <div class="chat-message">
+                    <div class="message-header">
+                        <strong>@comment.User?.UserName</strong>
+                        <span class="message-time">@comment.CreatedAt.ToString("g")</span>
+                    </div>
+                    <div class="message-content">
+                        @comment.Content
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No comments yet. Be the first to comment!</p>
+        }
+    </div>
+
+    <div class="chat-input">
+        <form id="commentForm" asp-antiforgery="true" data-attachment-id="@Model.AttachmentId">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <textarea id="commentContent" class="form-control" rows="3" placeholder="Add a comment..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Post Comment</button>
+        </form>
+    </div>
+</div>
