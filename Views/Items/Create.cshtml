@@ -1,0 +1,59 @@
+@model Item
+
+<h2>Create Item</h2>
+
+<form asp-action="Create" enctype="multipart/form-data">
+    <input type="hidden" asp-for="InventoryId" value="@ViewBag.Inventory.Id" />
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Brand"></label>
+        <input asp-for="Brand" class="form-control" />
+        <span asp-validation-for="Brand" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Model"></label>
+        <input asp-for="Model" class="form-control" />
+        <span asp-validation-for="Model" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Quantity"></label>
+        <input asp-for="Quantity" type="number" class="form-control" />
+        <span asp-validation-for="Quantity" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Price"></label>
+        <input asp-for="Price" type="number" step="0.01" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Weight"></label>
+        <input asp-for="Weight" type="number" step="0.01" class="form-control" />
+        <span asp-validation-for="Weight" class="text-danger"></span>
+    </div>
+    <div class="form-group form-check">
+        <input asp-for="InStock" class="form-check-input" type="checkbox" />
+        <label class="form-check-label" asp-for="InStock">In Stock</label>
+    </div>
+    <div class="form-group form-check">
+        <input asp-for="Fragile" class="form-check-input" type="checkbox" />
+        <label class="form-check-label" asp-for="Fragile">Fragile</label>
+    </div>
+    <div class="form-group form-check">
+        <input asp-for="Perishable" class="form-check-input" type="checkbox" />
+        <label class="form-check-label" asp-for="Perishable">Perishable</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+<div>
+    <a asp-action="Details" asp-route-id="@ViewBag.Inventory.Id">Back to Inventory</a>
+</div>

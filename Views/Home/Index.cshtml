@@ -1,0 +1,69 @@
+﻿﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1 class="display-4 mb-4">
+                <i class="fas fa-boxes text-primary"></i> Inventory Management System
+            </h1>
+            <p class="lead mb-5">
+                Organize, track, and manage your inventory with custom fields, advanced search, and collaborative features.
+            </p>
+        </div>
+    </div>
+
+    <!-- Features Overview -->
+    <div class="row mb-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="fas fa-id-card fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Custom ID Generation</h5>
+                    <p class="card-text">Create unique identifiers with custom formats including text, numbers, dates, and sequences.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="fas fa-search fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Advanced Search</h5>
+                    <p class="card-text">Find items instantly with powerful search across all inventories and custom fields.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="fas fa-users fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">Collaboration</h5>
+                    <p class="card-text">Share inventories with team members and control access permissions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <div class="card bg-light">
+                <div class="card-body py-5">
+                    <h3 class="card-title mb-4">Get Started Today</h3>
+                    <p class="card-text mb-4">
+                        Join thousands of users who trust our platform for their inventory management needs.
+                    </p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus"></i> Create Free Account
+                        </a>
+                        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-sign-in-alt"></i> Sign In
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

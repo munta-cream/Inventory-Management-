@@ -1,0 +1,91 @@
+@{
+    ViewData["Title"] = "Cloudinary Test";
+}
+
+<h1>Cloudinary Upload Test</h1>
+
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div class="alert alert-info">
+        <strong>@ViewBag.Message</strong>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.FileUrl))
+    {
+        <div class="alert alert-success">
+            <strong>File URL:</strong> <a href="@ViewBag.FileUrl" target="_blank">@ViewBag.FileUrl</a>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="alert alert-danger">
+            <strong>Error Details:</strong>
+            <pre>@ViewBag.Error</pre>
+        </div>
+    }
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Test File Upload</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="TestUpload" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="file">Select File:</label>
+                        <input type="file" name="file" id="file" class="form-control" required />
+                        <small class="form-text text-muted">Upload any file (image, PDF, document) to test Cloudinary connection</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload Test File</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Current Configuration</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Cloud Name:</strong> ddkg4twnc</p>
+                <p><strong>API Key:</strong> 145135865242565</p>
+                <p><strong>API Secret:</strong> [HIDDEN]</p>
+
+                <div class="alert alert-warning">
+                    <strong>Note:</strong> If uploads are failing, you may need to update your Cloudinary credentials in <code>appsettings.json</code>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Instructions</h5>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li>Upload a test file using the form above</li>
+                    <li>Check the console logs for detailed upload information</li>
+                    <li>If upload fails, check the error message for details</li>
+                    <li>Verify files appear in your Cloudinary dashboard</li>
+                </ol>
+
+                <h6>If uploads are failing:</h6>
+                <ol>
+                    <li>Go to <a href="https://cloudinary.com" target="_blank">Cloudinary</a> and sign up for a free account</li>
+                    <li>Get your Cloud Name, API Key, and API Secret from the dashboard</li>
+                    <li>Update the values in <code>appsettings.json</code></li>
+                    <li>Restart the application</li>
+                    <li>Test again</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
